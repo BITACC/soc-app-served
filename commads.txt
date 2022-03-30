@@ -1,0 +1,2 @@
+docker build -t soc_app .
+docker run -p 8080:80 soc_app 
