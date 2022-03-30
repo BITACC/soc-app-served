@@ -29,7 +29,7 @@ from color import COUNTIES, STATUSES, WELL_TYPES, COLORS
 import upload_file as upload
 import plotly.express as px
 import numpy as np
-import vaex
+
 
 from parameters import *
 from myutilities import *
