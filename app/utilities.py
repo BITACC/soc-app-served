@@ -7,6 +7,10 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import os
+import uuid
+
+UPLOAD_DIRECTORY = "Uploads"
+SESSION_ID= str(uuid.uuid1())
 
 
 # remove empty columns
@@ -63,6 +67,19 @@ def get_numeric_columns(_df):
     #numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     #newdf = df.select_dtypes(include=numerics)
     return _df.select_dtypes(include=np.number).columns.tolist()    
+
+def rows_with_k_consecutive_nans(df, k):
+    """This is exactly like the above but using pandas functions instead of
+    numpys. (see also Scott Boston answer). The approach is completly identical!
+    """
+    return df.isnull().rolling(window=k, axis=1).sum().ge(k).any(axis=1)
+
+def cols_with_k_consecutive_nans(df, k):
+    """This is exactly like the above but using pandas functions instead of
+    numpys. (see also Scott Boston answer). The approach is completly identical!
+    """
+    return df.isnull().rolling(window=k, axis=0).sum().ge(k).any(axis=0)
+
 
 
 # def floor_dt(tm):
@@ -174,7 +191,7 @@ def drop_empty_or_sparse_cols(_df, spec_cols ):
 
 
 
-def create_datatime_col(_df ):
+def create_datatime_col(_df, spec_cols):
     if ('Date'in _df.columns and 'Time' in _df.columns):
         
         _df['Date']= pd.to_datetime(_df['Date'], errors='coerce', dayfirst=True)
@@ -184,6 +201,10 @@ def create_datatime_col(_df ):
         _df['DateTime'] = _df['Date'].astype(str) + ' ' + _df['Time'].astype(str)
         _df['DateTime'] = _df['DateTime'].apply(lambda x: 
                                        datetime.strptime(x,"%d/%m/%Y %H:%M:%S"))
+        for e in spec_cols:
+            if  e in  _df.columns:
+                #print(e)
+                _df.drop(e, axis = 1, inplace = True)                                       
     else:
         print('Date and/or Time columns do not found ...')
     return _df
