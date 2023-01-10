@@ -160,7 +160,7 @@ def hex_rgba(hex, transparency):
     areacol = tuple(col_rgb)
     return areacol
 
-rgba = [hex_rgba(c, transparency=0.2) for c in colors]
+rgba = [hex_rgba(c, transparency=0.8) for c in colors]
 colCycle = ['rgba'+str(elem) for elem in rgba]
 
 # Make sure the colors run in cycles if there are more lines than colors
@@ -170,3 +170,5 @@ def next_col(cols):
             yield col
 line_color=next_col(cols=colCycle)
 
+#import matplotlib.colors as colors
+#colors_list = list(colors._colors_full_map.values())
