@@ -162,7 +162,7 @@ app.layout = html.Div(
         # main body
 
    
-    #dbc.Row(html.Div(dbc.Alert("This is one column", color="primary"))),
+    dbc.Row(html.Div(dbc.Alert("This is one column", color="primary"))),
 
 
 
