@@ -128,17 +128,9 @@ def check_model_type(_cols):
 
 
 
-# ml_models = [   {'label': 'Model 1', 'value':'Model 1'},
-#                 {'label':'Models 2' , 'value': 'Model 2'},
-#                 {'label': 'Model 3', 'value':'Model 3'}
-#             ]
-
-
-
-ml_models = [   #{'label': 'Model 1', 'value':'Model 1'},
-                {'label':'Sea Water (Lab)' , 'value': 'Sea Water (Lab)'},
-                {'label': 'Waste Water', 'value':'Waste Water'},
-                {'label': 'Sea Water (Demo)', 'value':'Sea Water (Demo)'}
+ml_models = [   {'label': 'Model 1', 'value':'Model 1'},
+                {'label':'Models 2' , 'value': 'Model 2'},
+                {'label': 'Model 3', 'value':'Model 3'}
             ]
 
 
@@ -170,7 +162,7 @@ app.layout = html.Div(
         # main body
 
    
-    dbc.Row(html.Div(dbc.Alert("This is one column", color="primary"))),
+    #dbc.Row(html.Div(dbc.Alert("This is one column", color="primary"))),
 
 
 
@@ -1335,22 +1327,19 @@ def make_figure_tab2(
         df = pd.read_json(jsonified_cleaned_data, orient='split')
 
         model_loaded = None
-        if ml_model_name['model'] == 'Sea Water (Lab)':
+        print("ml_model_name['model'] ", ml_model_name['model'])
+        if ml_model_name['model'] == "Model 1":
             #model_loaded = pickle.load(open('socorro_model_11.pkl', "rb"))
             model_loaded = joblib.load('socorro_model_1.sav')
-            df_tmp = df[['Temperature', 'pH', 'ORP', 'Conductivity']]
-            df_tmp.columns = ['f0', 'f1', 'f2', 'f3' ]
-            model_loaded.predict(df_tmp)
-        elif ml_model_name['model'] == 'Sea Water (Demo)':
-            model_loaded = joblib.load('SH1NH2_best.sav')
-            df_tmp = df[['Temperature', 'pH', 'dissolved oxygen (mg/l)', 'conductivity at 25°c', 'orp redox potential']]
-            
-        else: 
+        else:
             print("module is not available... program exits")
 
 
 
 
+        df_tmp = df[['Temperature', 'pH', 'ORP', 'Conductivity']]
+        df_tmp.columns = ['f0', 'f1', 'f2', 'f3' ]
+        model_loaded.predict(df_tmp)
         df['Corrosion Risk' ] = model_loaded.predict(df_tmp)
         #print( df['Corrosion Risk' ])
         df['Critical Corrosion Risk' ] = df['Corrosion Risk'][df['Corrosion Risk'] > max_corrosion_risk]#   > threshold).any(1)
