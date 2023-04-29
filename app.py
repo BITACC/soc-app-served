@@ -1,3 +1,7 @@
+#pip install xgboost==1.5.0
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logging.debug('This will get logged')
 # Import required libraries
 import pickle
 import copy
@@ -113,7 +117,7 @@ colnames_model = [
                     ["Date", "Time", "Temperature", "pH", "Dissolved oxygen", "Conductivity", "ORP", "Chloride"], 
                     ["Date", "Time", "Temperature", "pH", "Dissolved oxygen", "Conductivity", "ORP"]
                 ]
-model_name = ["HZS", "UGKLU"]
+#model_name = ["HZS", "UGKLU"]
 def check_model_type(_cols):
     
     _name = "None"
@@ -128,11 +132,11 @@ def check_model_type(_cols):
 
 
 
-ml_models = [   {'label': 'Model 1', 'value':'Model 1'},
-                {'label':'Models 2' , 'value': 'Model 2'},
-                {'label': 'Model 3', 'value':'Model 3'}
+ml_models = [   #{'label': 'Model 1', 'value':'Model 1'},
+                {'label':'Sea Water (Lab)' , 'value': 'Sea Water (Lab)'},
+                {'label': 'Waste Water', 'value':'Waste Water'},
+                {'label': 'Sea Water (Demo)', 'value':'Sea Water (Demo)'}
             ]
-
 
 # Create global chart template
 mapbox_access_token = "pk.eyJ1IjoicGxvdGx5bWFwYm94IiwiYSI6ImNrOWJqb2F4djBnMjEzbG50amg0dnJieG4ifQ.Zme1-Uzoi75IaFbieBDl3A"
@@ -811,7 +815,7 @@ def update_output(uploaded_file_contents, uploaded_filenames, list_of_dates):
     #print(df_current.columns)
     #mdl_tag = check_model_type(df_current.columns)
     #print(df_current.head)
-    print(df_current.head())
+    print(df_current.head(50))
  
     df_current = keep_columns(df_current, colnames_kept)
     # more generally, this line would be
@@ -1327,19 +1331,27 @@ def make_figure_tab2(
         df = pd.read_json(jsonified_cleaned_data, orient='split')
 
         model_loaded = None
-        print("ml_model_name['model'] ", ml_model_name['model'])
-        if ml_model_name['model'] == "Model 1":
+      
+        
+        df_tmp = None 
+      
+
+        if ml_model_name['model'] == 'Sea Water (Lab)':
             #model_loaded = pickle.load(open('socorro_model_11.pkl', "rb"))
             model_loaded = joblib.load('socorro_model_1.sav')
-        else:
+            df_tmp = df[['Temperature', 'pH', 'ORP', 'Conductivity']]
+
+        elif ml_model_name['model'] == 'Sea Water (Demo)':
+            model_loaded = joblib.load('SH1NH2_best.sav')
+            df_tmp = df[['Temperature', 'pH', 'dissolved oxygen (mg/l)', 'conductivity at 25°c', 'orp redox potential']]
+            
+        else: 
             print("module is not available... program exits")
 
 
 
 
-        df_tmp = df[['Temperature', 'pH', 'ORP', 'Conductivity']]
-        df_tmp.columns = ['f0', 'f1', 'f2', 'f3' ]
-        model_loaded.predict(df_tmp)
+
         df['Corrosion Risk' ] = model_loaded.predict(df_tmp)
         #print( df['Corrosion Risk' ])
         df['Critical Corrosion Risk' ] = df['Corrosion Risk'][df['Corrosion Risk'] > max_corrosion_risk]#   > threshold).any(1)
