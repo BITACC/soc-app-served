@@ -11,7 +11,7 @@ port = int(os.environ.get("PORT", 5000))
 
 
 ## info
-app_name = "SOCORRO App"
+app_name = "SOCOAPP"
 contacts = ""
 code = ""
 tutorial = ""
