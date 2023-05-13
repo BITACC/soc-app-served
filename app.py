@@ -39,17 +39,19 @@ import plotly.express as px
 import numpy as np
 
 
-import params.parameters as params
+from parameters import params
 
 
-for e in params.models:
-    print( e, params.models[e])
+# for e in params.models:
+#     print( e, params.models[e])
 
 import dash_bootstrap_components as dbc
 
 from myutilities import *
 from utilities import *
+from utilities import utils
 import joblib
+from SPG import *
 
 #import scipy.signal as scp
 #from scipy import stats
@@ -59,10 +61,11 @@ import plotly.graph_objs as go, pandas as pd, plotly.express as px
 
 import pickle
 from sklearn.linear_model import LinearRegression
-
+import sys, os
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("data").resolve()
+MODEL_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__),  'models'))
 
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
@@ -79,7 +82,9 @@ app.title = "SOCORRO APP"
 # app.title = config.app_name
 
 #df_current = pd.read_excel( "data/data-03122020-manuallymodified-SG.xlsx", header=0)#, parse_dates=[0], index_col=0
-default_data_file = "data/AllMeas(Apr01-08).xlsx"
+#default_data_file = "data/AllMeas(Apr01-08).xlsx"
+default_data_file = "data/demo1.csv"
+default_model = 'KULAnoxic_rg.sav'
 
 server = app.server
 app.scripts.config.serve_locally = True
@@ -103,20 +108,16 @@ import data_cleaning as dc
 import imputers as imp
 from datetime import date
 
-datetime = ['datetime64[ns]']
-target = "Meas_Rate"
-	
+#datetime = ['datetime64[ns]']
+#target = "Meas_Rate"
+MODEL_FOLDER = "models"
 
-colnames_kept = [    'Temperature', 'Dissolved Oxygen', #"Meas_Rate", #'DDate',
-                    'pH',  'ORP'#, #################################################  =>'AUX2:Chloride'  # FIX: 'AUX2:Turrbidity'
-                ,   'Conductivity'
-                ]
-
+colnames_kept = utils.casefolded_train_col_names_except_date_time
                     #"Chloride [mg/l]", "Conductivity at 25°C", "Dissolved oxygen [mg/l]", "Meas_Rate", "ORP Redox potential", "Corrosion rate (LPR)"
-colnames_model = [
-                    ["Date", "Time", "Temperature", "pH", "Dissolved oxygen", "Conductivity", "ORP", "Chloride"], 
-                    ["Date", "Time", "Temperature", "pH", "Dissolved oxygen", "Conductivity", "ORP"]
-                ]
+# colnames_model = [
+#                     ["Date", "Time", "Temperature", "pH", "Dissolved oxygen", "Conductivity", "ORP", "Chloride"], 
+#                     ["Date", "Time", "Temperature", "pH", "Dissolved oxygen", "Conductivity", "ORP"]
+#                 ]
 #model_name = ["HZS", "UGKLU"]
 def check_model_type(_cols):
     
@@ -132,11 +133,15 @@ def check_model_type(_cols):
 
 
 
-ml_models = [   #{'label': 'Model 1', 'value':'Model 1'},
-                {'label':'Sea Water (Lab)' , 'value': 'Sea Water (Lab)'},
-                {'label': 'Waste Water', 'value':'Waste Water'},
-                {'label': 'Sea Water (Demo)', 'value':'Sea Water (Demo)'}
+ml_models = [   
+    
+                {'label': 'Waste Water, Anoxic', 'value':'Waste Water, Anoxic'},
+                {'label': 'Waste Water, Oxic', 'value':'Waste Water, Oxic'},
+                {'label': 'Waste Water, Combined', 'value':'Waste Water, Combined'},
+                {'label': 'Seawater, Field trained', 'value':'Seawater, Field trained'},
+                {'label':'Seawater, Lab trained' , 'value': 'Seawater, Lab trained'}
             ]
+
 
 # Create global chart template
 mapbox_access_token = "pk.eyJ1IjoicGxvdGx5bWFwYm94IiwiYSI6ImNrOWJqb2F4djBnMjEzbG50amg0dnJieG4ifQ.Zme1-Uzoi75IaFbieBDl3A"
@@ -479,7 +484,7 @@ app.layout = html.Div(
                                                     style={'width': '10%', 'display': 'inline-block', 'verticalAlign': 'middle', 'padding: ': '10px', 
                                                     #"float": 'left',
                                                     },
-                                                ),
+                                                )
                                             
                                         ],
                                         className="pretty_container four columns",
@@ -700,6 +705,10 @@ app.layout = html.Div(
                                             # id="tab2-section-input-report",
                                             # className="eight columns",
                                             # ),
+                                                html.Div([
+                                                    html.Button("Download CSV", id="btn_csv"),
+                                                    dcc.Download(id="download-dataframe-csv"),
+                                                ])
                                         ],
                                         className="pretty_container twelve columns",
                                     ),
@@ -766,7 +775,17 @@ app.layout = html.Div(
     style={"display": "flex", "flex-direction": "column"},
 )
 
-
+@app.callback(
+    Output("download-dataframe-csv", "data"),
+    Input("btn_csv", "n_clicks"),
+    Input("tab2-data-preprocessed-predicted", 'data'),
+    prevent_initial_call=True,
+)
+def func(n_clicks, jsonified_predicted_data):
+    df = pd.read_json(jsonified_predicted_data, orient='split')
+    df.to_csv(r'a.csv', sep = ';', index = False, header=True, encoding='utf-8')
+    return dcc.send_data_frame(df.to_csv, "SOCORROAPP"+  ".csv") #date.ctime() +
+    
 #READ THE XLSS FILE, DO PREPROCESSING, IMPUTING, OUTLIER REMOVAL AND SCALING OF MEAS_RATE
 
 
@@ -795,29 +814,14 @@ def update_output(uploaded_file_contents, uploaded_filenames, list_of_dates):
             break
 
     if uploaded_filenames is  None or uploaded_file_contents is  None:
-        
-        df_current = pd.read_excel( default_data_file, header=0)#, parse_dates=[0], index_col=0
+        df_current = pd.read_csv(default_data_file, delimiter=';', parse_dates = {'DateTime' : ['Date', 'Time']}, index_col = ['DateTime'], dayfirst=True) 
+        print(df_current.head(10))
+        #df_current = pd.read_csv( default_data_file, header=0)#, parse_dates=[0], index_col=0
         msg = "" #"Loaded with default data file"
 
-
-
-    df_current = strip_df_colnames(df_current)
-    df_current, empties = drop_empty_or_sparse_cols(df_current, ['Date', 'Time'])
-    df_current = create_datatime_col(df_current, ['Date', 'Time'])    
-    df_current = strip_no_numeric_cols(df_current)
-    df_current = set_df_col_as_index(df_current, 'DateTime')   
-    #from indexed df select onlu numerical columns (DateTime already used in index)
-    df_current = df_current.select_dtypes(include=np.number)
-
-    
- 
-    #print(df_current.dtypes)
-    #print(df_current.columns)
-    #mdl_tag = check_model_type(df_current.columns)
-    #print(df_current.head)
-    print(df_current.head(50))
- 
-    df_current = keep_columns(df_current, colnames_kept)
+    df_current = utils.prepare_data([df_current])
+    print(utils.casefolded_train_col_names_except_date_time_target)
+    df_current = utils.keep_columns(df_current[0], utils.casefolded_train_col_names_except_date_time_target)
     # more generally, this line would be
     # json.dumps(cleaned_df)
     return [df_current.to_json(date_format='iso', orient='split'), html.Ul( uploaded_file_path ), msg,
@@ -852,10 +856,10 @@ def update_dropdowns(
     if jsonified_cleaned_data is not None:
         df = pd.read_json(jsonified_cleaned_data, orient='split')
 
-        return  [   [{'label': k, 'value': k} for k in ['index'] + keept_cols(df, colnames_kept) ],
-                    [{'label': k, 'value': k} for k in ['index'] + keept_cols(df, colnames_kept) ],
-                    [{'label': k, 'value': k} for k in ['index'] + keept_cols(df, colnames_kept) ],
-                    'index', colnames_kept[0], [k for k in keept_cols(df, colnames_kept)]
+        return  [   [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept) ],
+                    [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept) ],
+                    [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept) ],
+                    'index', colnames_kept[0], [k for k in utils.keept_cols_2(df, colnames_kept)]
                 ]
     return [ [ ],  [], [], None, None , None  ]
 
@@ -1117,7 +1121,7 @@ def preprocess_df(jsonified_cleaned_data,  date_from, date_to):#checkedProcess,
 
         print("----------test:\n")
         K=3
-        conseq_nulls = cols_with_k_consecutive_nans(df_current, K)
+        conseq_nulls = utils.cols_with_k_consecutive_nans_2(df_current, K)
         #print(conseq_nulls)
         mes_pieces = {}
         for col in df_current.columns:
@@ -1149,51 +1153,19 @@ def preprocess_df(jsonified_cleaned_data,  date_from, date_to):#checkedProcess,
         return_divs.append (html.P("Consecutive missing values (at least 3)\n", style={'color': 'red'}))
         missing_seqs = [ df_current[a].isnull().astype(int).groupby(df_current[a].notnull().astype(int).cumsum()).sum() for a in df_current.columns]
 
-
-
-        # has_missing = False
-        # for a, col  in zip(missing_seqs, df_current.columns):
-        #     if len(list(a[a > 2].index)) > 0:
-        #         has_missing = True
-        #         return_divs.append(	html.P(col  + " contains missing sequences at " + str(list(a[a > 2].index)) ))
-        
-
-       
         return_divs.append(	html.P("The computations continue by elliminating the rows containing missing values.", style={'color': 'red'}))
-        #return_divs.append(	html.P("Existing trends: ", style={'color': 'red'}))
-
-        # if has_missing:
-        #     df_current.dropna(inplace=True, axis='rows')
-
-        
-        #print(count_nan)
-
-
-        # for  col  in df_current.columns:
-        #     reg = LinearRegression().fit(np.array([i for i in range(df_current.shape[0])]).reshape(-1,1), list(df_current[col].values))
-        #     slope = (reg.coef_[0])
-        #     return_divs.append(	html.P(" Linear regression slope for " + col  + " is : " +  str("{:.3f}".format(slope)) ))
-
-        #return_divs.append(	html.P("End of reporting.", style={'color': 'red'}))
-
-        
-        #print("=============")
-
-
         
         return [
                 df_current.to_json(date_format='iso', orient='split'), 
                 # df_current.index.min(), df_current.index.max(), df_current.index.min(),
                 # df_current.index.min(), df_current.index.max(), df_current.index.max(),
                 return_divs,
-                [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  keept_cols(df_current, colnames_kept) ],
-                [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  keept_cols(df_current, colnames_kept) ],
-                [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  keept_cols(df_current, colnames_kept) ],
+                [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  utils.keept_cols_2(df_current, colnames_kept) ],
+                [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  utils.keept_cols_2(df_current, colnames_kept) ],
+                [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  utils.keept_cols_2(df_current, colnames_kept) ],
                 
                 df_current.to_json(date_format='iso', orient='split'), 0.6, 100,0.6
         ]
-                #
-                #df_current.df.index.min(), df_current.df.index.max(), df_current.df.index.max()]
                
      #return [None , None, None, None, None, None, None]
      return [None , None , None, None, None , None, None, [], [], [], [], [], [], [], None, 0.6, 100,0.6]
@@ -1334,23 +1306,33 @@ def make_figure_tab2(
       
         
         df_tmp = None 
-      
 
-        if ml_model_name['model'] == 'Sea Water (Lab)':
-            #model_loaded = pickle.load(open('socorro_model_11.pkl', "rb"))
-            model_loaded = joblib.load('socorro_model_1.sav')
-            df_tmp = df[['Temperature', 'pH', 'ORP', 'Conductivity']]
+        if ml_model_name['model'] == 'Waste Water, Anoxic':     #1
+            _path = os.path.join(MODEL_DIR, 'KULAnoxic_rg.sav')
+            model_loaded = joblib.load(_path)
 
-        elif ml_model_name['model'] == 'Sea Water (Demo)':
-            model_loaded = joblib.load('SH1NH2_best.sav')
-            df_tmp = df[['Temperature', 'pH', 'dissolved oxygen (mg/l)', 'conductivity at 25°c', 'orp redox potential']]
-            
+        elif ml_model_name['model'] == 'Waste Water, Oxic':     #2
+            model_loaded = joblib.load('KULOxic_rg.sav')
+
+        elif ml_model_name['model'] == 'Waste Water, Combined': #3
+            model_loaded = joblib.load(default_model)
+
+        elif ml_model_name['model'] == 'Seawater, Field trained':     #4
+            model_loaded = joblib.load('SH1NH2_rg.sav')
+
+        elif ml_model_name['model'] == 'Seawater, Lab trained':     #5
+            model_loaded = joblib.load(default_model)
+
         else: 
             print("module is not available... program exits")
+            model_loaded = joblib.load(MODEL_DIR , 'KULAnoxic_rg.sav')
+        
 
 
 
-
+        
+        df_tmp = df[utils.casefolded_train_col_names_except_date_time_target]
+        print(df.columns, utils.casefolded_train_col_names_except_date_time_target)
 
         df['Corrosion Risk' ] = model_loaded.predict(df_tmp)
         #print( df['Corrosion Risk' ])

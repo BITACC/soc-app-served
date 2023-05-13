@@ -5,7 +5,7 @@ import io
 import os
 import dash_html_components as html
 import dash_table
-from  utilities import SESSION_ID, UPLOAD_DIRECTORY
+from  utilities import * #SESSION_ID, UPLOAD_DIRECTORY
 
 #path = '..\\..\\Phase 1\\data\\'
 def parse_contents(contents, filename, date):
@@ -122,7 +122,7 @@ def parse_data1(contents, filename):
         if "csv" in filename:
             # Assume that the user uploaded a CSV or TXT file
             msg = "csv"
-            df = pd.read_csv(io.StringIO(decoded.decode("utf-8")))
+            df = pd.read_csv(io.StringIO(decoded.decode("utf-8")), delimiter=';', parse_dates = {'DateTime' : ['Date', 'Time']}, index_col = ['DateTime'], dayfirst=True)
         elif "xlsx" in filename:
             # Assume that the user uploaded an excel file
             msg = "xlsx"
