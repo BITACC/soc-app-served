@@ -89,3 +89,4 @@ openpyxl
 xlrd
 #==1.2.0
 #pickle
+joblib==1.2.0
