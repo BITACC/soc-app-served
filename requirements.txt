@@ -90,4 +90,4 @@ xlrd
 #==1.2.0
 #pickle
 joblib==1.2.0
-tqdm==4.65.0
+
