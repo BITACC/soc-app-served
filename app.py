@@ -18,7 +18,7 @@ import pandas as pd
 from dash.dependencies import Input, Output, State, ClientsideFunction
 from dash import dcc
 from dash import dash_table
-import dash_html_components as html
+from dash import html
 import dash_core_components  as core
 from plotly.subplots import make_subplots
 
