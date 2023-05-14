@@ -48,10 +48,6 @@ def data_import( data_type , Multifile = True):
     else:
         df = [pd.read_csv(os.path.join(DATA_DIR, data_type, f), header = 0, delimiter=';', parse_dates = {'DateTime' : ['Date', 'Time']}, index_col = ['DateTime'])  for f in FILES[data_type]] #, dayfirst=True, parse_dates=[['Date', 'Time']] , date_parser=mydateparser
 
-
-        for d in df:
-            print("# records: ", d.shape[0], type(d))
-    
     return df#, train_datafile
 
 def prepare_data(df, Multifile = True):
@@ -80,13 +76,10 @@ def prepare_data(df, Multifile = True):
         #df = [f.values.astype(np.float64) for f in df] 
         df =[ f.dropna(how='any',axis=0) for f in df ]
         for f in df:
-            #print(f.iloc[3319])
             for c in f.columns:
-                #print(c)
                 f[c] = pd.to_numeric(f[c], errors = 'coerce')
             f = f.dropna(subset = casefolded_train_col_names_except_date_time_target) 
 
-        print(df[0].index)
     
     return df
 
@@ -107,8 +100,6 @@ def drop_empty_rows_cols(_df):
 # remove empty columns
 
 def strip_remove_multiplespace_df_colnames(_df, to_casefold = False):
-    print(_df.columns)
-    print(_df.dtypes)
     _df = _df.rename(columns={c: str.strip(c)  for c in _df.columns})
     _df = _df.rename(columns={c: re.sub(' +', ' ', c)  for c in _df.columns})
     if to_casefold:
@@ -125,7 +116,6 @@ def drop_empty_cols(_df, spec_cols ):
     empty_cols = _df.columns[_df.isnull().mean()>0.5]
     _df.drop(empty_cols, axis = 1, inplace = True)
     for c in spec_cols:
-        #print (c)
         _df.dropna(subset=[c], inplace=True)
     
     return _df
@@ -140,7 +130,6 @@ def keep_columns(_df, colnames_kept):
 def strip_no_numeric_cols(_df):
     
     cols = list(_df.select_dtypes(include=['object', 'string']).columns)
-    #print(_df.dtypes)
     for c in cols: 
         _df[c] = _df[c].astype(str)
         _df[c] = _df[c].apply(lambda x:str.strip (x)  ) 
@@ -273,13 +262,11 @@ def drop_empty_or_sparse_cols(_df, spec_cols ):
     #delete all cols containing Unnamed
     for e in _df.columns:
         if 'Unnamed' in e:
-            #print(e)
             _df.drop(e, axis = 1, inplace = True)
     empty_cols = _df.columns[_df.isnull().mean()>0.5]
     _df.drop(empty_cols, axis = 1, inplace = True)
     for c in spec_cols:
         if c in _df.columns:
-            #print(c)
             _df.drop(columns=[c], inplace=True)
     
     return _df    
