@@ -1275,8 +1275,8 @@ def make_figure_tab2(
         elif ml_model_name['model'] == 'Waste Water, Oxic':     #2
             model_loaded = joblib.load('KULOxic_rg.sav')
 
-        elif ml_model_name['model'] == 'Waste Water, Combined': #3
-            model_loaded = joblib.load(default_model)
+        elif ml_model_name['model'] == 'Waste Water, Combined_rg': #3
+            model_loaded = joblib.load('Waste Water, Combined_rg.sav')
 
         elif ml_model_name['model'] == 'Seawater, Field trained':     #4
             model_loaded = joblib.load('SH1NH2_rg.sav')
