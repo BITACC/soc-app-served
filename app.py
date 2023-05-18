@@ -501,7 +501,7 @@ app.layout = html.Div(
                                             
                                             html.Img(
                                                 src=app.get_asset_url("roestzee1.webp"),
-                                                id="logo-spg",
+                                                id="fig1",
                                                 style={
                                                     "height": "250",
                                                     "width": "auto",
@@ -518,7 +518,7 @@ app.layout = html.Div(
                                     #         html.H3(
                                     #             "Challenge",
                                     #             style={"margin-bottom": "0px"},
-                                    #         ),
+                                     #         ),
                                     #         html.P("In any kind of industry where water meets steel, corrosion is an underestimated threat - and a very expensive one too: corrosion costs for the European region alone amount to €500bn (DNV-GL report). Currently, there is no general approach which is followed in the industry to assess the risk of corrosion and to prevent it from happening.  This may even lead to cost reductions of about 25-30%.", className="control_label"),
                                     #     ],
                                     #     className="pretty_container eight columns",
@@ -535,7 +535,7 @@ app.layout = html.Div(
                                             
                                             html.Img(
                                                 src=app.get_asset_url("industrieroest1.webp"),
-                                                id="logo-spg",
+                                                id="fig2",
                                                 style={
                                                     "height": "250",
                                                     "width": "auto",
