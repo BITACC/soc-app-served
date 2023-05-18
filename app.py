@@ -513,17 +513,17 @@ app.layout = html.Div(
                                         className="pretty_container four columns",
                                         id="tab3-fig1-cross-filter-options",
                                     ),
-                                    # html.Div(
-                                    #     [
-                                    #         html.H3(
-                                    #             "Challenge",
-                                    #             style={"margin-bottom": "0px"},
-                                     #         ),
-                                    #         html.P("In any kind of industry where water meets steel, corrosion is an underestimated threat - and a very expensive one too: corrosion costs for the European region alone amount to €500bn (DNV-GL report). Currently, there is no general approach which is followed in the industry to assess the risk of corrosion and to prevent it from happening.  This may even lead to cost reductions of about 25-30%.", className="control_label"),
-                                    #     ],
-                                    #     className="pretty_container eight columns",
-                                    #     id="cross-filter-options",
-                                    # ),
+                                    html.Div(
+                                        [
+                                            html.H3(
+                                                "Challenge",
+                                                style={"margin-bottom": "0px"},
+                                             ),
+                                            html.P("In any kind of industry where water meets steel, corrosion is an underestimated threat - and a very expensive one too: corrosion costs for the European region alone amount to €500bn (DNV-GL report). Currently, there is no general approach which is followed in the industry to assess the risk of corrosion and to prevent it from happening.  This may even lead to cost reductions of about 25-30%.", className="control_label"),
+                                        ],
+                                        className="pretty_container eight columns",
+                                        id="tab3-paragraph-cross-filter-options",
+                                    ),
                                 ],
                                 className="row flex-display",
                             ),
