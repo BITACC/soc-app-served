@@ -522,7 +522,7 @@ app.layout = html.Div(
                                             html.P("In any kind of industry where water meets steel, corrosion is an underestimated threat - and a very expensive one too: corrosion costs for the European region alone amount to €500bn (DNV-GL report). Currently, there is no general approach which is followed in the industry to assess the risk of corrosion and to prevent it from happening.  This may even lead to cost reductions of about 25-30%.", className="control_label"),
                                         ],
                                         className="pretty_container eight columns",
-                                        id="tab3-paragraph-cross-filter-options",
+                                        id="tab3-paragraph1-cross-filter-options",
                                     ),
                                 ],
                                 className="row flex-display",
@@ -547,17 +547,17 @@ app.layout = html.Div(
                                         className="pretty_container four columns",
                                         id="tab3-fig2-cross-filter-options",
                                     ),
-                                    # html.Div(
-                                    #     [
-                                    #         html.H3(
-                                    #             "Objective",
-                                    #             style={"margin-bottom": "0px"},
-                                    #         ),
-                                    #         html.P("Provide companies with independent means to assess corrosion risks in order to increase awareness and take preventive actions. Create a fast in situ sensor system to monitor a range of environmental markers to determine the risk of corrosion of steel submerged in water, as well as a statistical method to mine data for overall corrosion risk estimate. Implement and demonstrate in several industrial case studies (wind turbines at sea, water desalination/sanitation, ship’s hulls and ballast tanks, harbour sheet piles, process water) and show economic opportunities.", className="control_label"),
-                                    #     ],
-                                    #     className="pretty_container eight columns",
-                                    #     id="cross-filter-options",
-                                    # ),
+                                    html.Div(
+                                        [
+                                            html.H3(
+                                                "Objective",
+                                                style={"margin-bottom": "0px"},
+                                            ),
+                                            html.P("Provide companies with independent means to assess corrosion risks in order to increase awareness and take preventive actions. Create a fast in situ sensor system to monitor a range of environmental markers to determine the risk of corrosion of steel submerged in water, as well as a statistical method to mine data for overall corrosion risk estimate. Implement and demonstrate in several industrial case studies (wind turbines at sea, water desalination/sanitation, ship’s hulls and ballast tanks, harbour sheet piles, process water) and show economic opportunities.", className="control_label"),
+                                        ],
+                                        className="pretty_container eight columns",
+                                        id="tab3-paragraph2-cross-filter-options",
+                                    ),
                                 ],
                                 className="row flex-display",
                             ),
