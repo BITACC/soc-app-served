@@ -1282,7 +1282,7 @@ def make_figure_tab2(
             model_loaded = joblib.load('SH1NH2_rg.sav')
 
         elif ml_model_name['model'] == 'Seawater, Lab trained':     #5
-            model_loaded = joblib.load(default_model)
+            model_loaded = joblib.load('Seawater, Lab trained_rg.sav')
 
         else: 
             logging.debug("module is not available... program exits")

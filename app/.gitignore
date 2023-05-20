@@ -1,6 +1,0 @@
-venv
-old-app.py
-.pyc
-.env
-.ipynb*
-*__py*
