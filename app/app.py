@@ -25,7 +25,7 @@ import plotly
 
 #import dash_bootstrap_components as dbc
 
-from myutilities import *
+#from myutilities import *
 import random
 # Multi-dropdown options
 from color import COUNTIES, STATUSES, WELL_TYPES, COLORS

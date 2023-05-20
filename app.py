@@ -1273,20 +1273,25 @@ def make_figure_tab2(
             model_loaded = joblib.load(_path)
 
         elif ml_model_name['model'] == 'Waste Water, Oxic':     #2
-            model_loaded = joblib.load('KULOxic_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'KULOxic_rg.sav')
+            model_loaded = joblib.load(_path)
 
         elif ml_model_name['model'] == 'Waste Water, Combined_rg': #3
-            model_loaded = joblib.load('Waste Water, Combined_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'Waste Water, Combined_rg.sav')
+            model_loaded = joblib.load(_path)
 
         elif ml_model_name['model'] == 'Seawater, Field trained':     #4
-            model_loaded = joblib.load('SH1NH2_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'SH1NH2_rg.sav')
+            model_loaded = joblib.load(_path)
 
         elif ml_model_name['model'] == 'Seawater, Lab trained':     #5
-            model_loaded = joblib.load('Seawater, Lab trained_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'Seawater, Lab trained_rg.sav')
+            model_loaded = joblib.load(_path)
 
         else: 
             logging.debug("module is not available... program exits")
-            model_loaded = joblib.load(MODEL_DIR , 'KULAnoxic_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'KULAnoxic_rg.sav')
+            model_loaded = joblib.load(_path)
         
 
 
