@@ -1,4 +1,12 @@
-
+#############################################################################################
+# Sharkey Predictim Globe 
+# Email: contact@predictim-globe.com
+# Web: www.predictim-globe.com
+# File: utils.py
+# Description: This code is a part of the SOCORRO App 
+# Author: Rahimeh N Monemi
+# Date: 25/05/2023
+#############################################################################################
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -40,8 +48,6 @@ SESSION_ID= str(uuid.uuid1())
 
 
 def data_import( data_type , Multifile = True):
-    #, "Laboratory_data_AMA_All_Data.xlsx"  , "Ugent_20220216_till_20220420.xlsx" ] # ,  "Laboratory_data_KUL.xlsx"  , "Laboratory_data_AMA_All_Data.xlsx"   ,  "Laboratory_data_UGENT.xlsx"
-    # 
     df = None
     if not Multifile :
         pass

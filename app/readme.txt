@@ -1,17 +1,17 @@
 python -m venv   .\venv
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install dash
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install dash_core_components
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install dash_html_components
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install dash_table
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install impyute
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install numpy
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install pandas
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install plotly
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install scikit_learn
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install scipy
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install xlrd
+Local\Programs\Python\Python310\python -m pip install dash
+Local\Programs\Python\Python310\python -m pip install dash_core_components
+Local\Programs\Python\Python310\python -m pip install dash_html_components
+Local\Programs\Python\Python310\python -m pip install dash_table
+Local\Programs\Python\Python310\python -m pip install impyute
+Local\Programs\Python\Python310\python -m pip install numpy
+Local\Programs\Python\Python310\python -m pip install pandas
+Local\Programs\Python\Python310\python -m pip install plotly
+Local\Programs\Python\Python310\python -m pip install scikit_learn
+Local\Programs\Python\Python310\python -m pip install scipy
+Local\Programs\Python\Python310\python -m pip install xlrd
 
-C:\Users\Gelareh\AppData\Local\Programs\Python\Python310\python -m pip install gunicorn
+Local\Programs\Python\Python310\python -m pip install gunicorn
 
 ==2.0.0
 ==2.0.0

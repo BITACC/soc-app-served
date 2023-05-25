@@ -1,5 +1,5 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.8
-LABEL maintainer="Shahin Gelareh <contact@predictim-globe.com>"
+LABEL maintainer="Rahimeh Neamatian Monemi <contact@predictim-globe.com>"
 
 COPY requirements.txt /tmp/
 COPY ./app /app

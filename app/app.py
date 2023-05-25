@@ -25,12 +25,11 @@ import plotly
 
 #import dash_bootstrap_components as dbc
 
-#from myutilities import *
 import random
 # Multi-dropdown options
-from color import COUNTIES, STATUSES, WELL_TYPES, COLORS
-from color import *
-import upload_file as upload
+from utilities.spg_color import COUNTIES, STATUSES, WELL_TYPES, COLORS
+from utilities.spg_color import *
+import utilities.upload_file as upload
 import plotly.express as px
 import numpy as np
 
@@ -43,7 +42,6 @@ for e in params.models:
 
 import dash_bootstrap_components as dbc
 
-from myutilities import *
 from utilities import *
 import joblib
 
@@ -95,8 +93,6 @@ import dash_uploader  as du
 UPLOAD_FOLDER_ROOT = "./Uploads"
 du.configure_upload(app, UPLOAD_FOLDER_ROOT)
 
-import data_cleaning as dc
-import imputers as imp
 from datetime import date
 
 datetime = ['datetime64[ns]']

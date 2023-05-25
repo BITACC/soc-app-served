@@ -1,3 +1,12 @@
+#############################################################################################
+# Sharkey Predictim Globe 
+# Email: contact@predictim-globe.com
+# Web: www.predictim-globe.com
+# File: params.py
+# Description: This code is a part of the SOCORRO App 
+# Author: Rahimeh N Monemi
+# Date: 25/05/2023
+#############################################################################################
 period1 = 50
 period2 = 200
 cols_for_training = [

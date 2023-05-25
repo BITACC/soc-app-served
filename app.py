@@ -1,3 +1,14 @@
+#############################################################################################
+# Sharkey Predictim Globe 
+# Email: contact@predictim-globe.com
+# Web: www.predictim-globe.com
+# File: app.py
+# Description: This code is a part of the SOCORRO App 
+# Author: Rahimeh N Monemi
+# Date: 25/05/2023
+#############################################################################################
+
+
 #pip install xgboost==1.5.0
 # Import required libraries
 import logging
@@ -18,8 +29,8 @@ import plotly.graph_objs as go
 from plotly import tools
 import plotly
 import random
-from color import *
-import upload_file as upload
+from utilities.spg_color import *
+import utilities.upload_file as upload
 import plotly.express as px
 import numpy as np
 from parameters import params
@@ -79,8 +90,6 @@ import dash_uploader  as du
 UPLOAD_FOLDER_ROOT = "./Uploads"
 du.configure_upload(app, UPLOAD_FOLDER_ROOT)
 
-import data_cleaning as dc
-import imputers as imp
 from datetime import date
 
 #datetime = ['datetime64[ns]']
@@ -569,58 +578,6 @@ app.layout = html.Div(
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
 )
-
-# @app.callback(
-#     Output("download-dataframe-csv", "data"),
-#     Input("btn_csv", "n_clicks"),
-#     Input("tab2-data-preprocessed-predicted", 'data'),
-#     prevent_initial_call=True,
-# )
-# def func(n_clicks, jsonified_predicted_data):
-#     df = pd.read_json(jsonified_predicted_data, orient='split')
-#     df.to_csv(r'a.csv', sep = ';', index = False, header=True, encoding='utf-8')
-#     return dcc.send_data_frame(df.to_csv, "SOCORROAPP"+  ".csv") #date.ctime() +
-    
-
-# @app.callback(Output('df',  'data'),
-#               Output('callback-output', 'children'),
-#               Output("file-list", "children"),
-#                #Output('xaxis-column', 'options'), Output('yaxis-column', 'options'),
-#                # Output('xaxis-column', 'value'), Output('yaxis-column', 'value'),
-#               Output('datepicker-from-tab2', 'min_date_allowed'), Output('datepicker-from-tab2', 'max_date_allowed'),Output('datepicker-from-tab2', 'date'),
-#               Output('datepicker-to-tab2', 'min_date_allowed'), Output('datepicker-to-tab2', 'max_date_allowed'),Output('datepicker-to-tab2', 'date'),
-
- 
-#             [Input('upload-data', 'contents'),
-#             State('upload-data', 'filename'),
-#             State('upload-data', 'last_modified')
-#             ])
-
-# def update_output(uploaded_file_contents, uploaded_filenames, list_of_dates):
-#     df_current = None
-#     msg =  ""# [html.Li("Nothing!")]
-#     uploaded_file_path = None
-#     if uploaded_filenames is not None and uploaded_file_contents is not None:
-#         for name, data in zip(uploaded_filenames, uploaded_file_contents):
-#             df_current, msg = upload.parse_data1(data, name)
-#             msg = ""
-#             break
-
-#     if uploaded_filenames is  None or uploaded_file_contents is  None:
-#         df_current = pd.read_csv(default_data_file, delimiter=';', parse_dates = {'DateTime' : ['Date', 'Time']}, index_col = ['DateTime'], dayfirst=True) 
-#         print(df_current.head(10))
-#         #df_current = pd.read_csv( default_data_file, header=0)#, parse_dates=[0], index_col=0
-#         msg = "" #"Loaded with default data file"
-
-#     df_current = utils.prepare_data([df_current])
-#     print(utils.casefolded_train_col_names_except_date_time_target)
-#     df_current = utils.keep_columns(df_current[0], utils.casefolded_train_col_names_except_date_time_target)
-#     # more generally, this line would be
-#     # json.dumps(cleaned_df)
-#     return [df_current.to_json(date_format='iso', orient='split'), html.Ul( uploaded_file_path ), msg,
-#             df_current.index.min(), df_current.index.max(), df_current.index.min(),
-#             df_current.index.min(), df_current.index.max(), df_current.index.max(),
-#                 ]
                
 @app.callback(
     Output("download-dataframe-csv", "data"),
@@ -677,130 +634,45 @@ def update_output(uploaded_file_contents, uploaded_filenames, list_of_dates):
             df_current.index.min(), df_current.index.max(), df_current.index.min(),
             df_current.index.min(), df_current.index.max(), df_current.index.max()]
 
-
-
-
-# @app.callback(
-
-#     Output('xaxis-column', 'options'),  Output('yaxis-column', 'options'),  Output('y-axix-ddown', 'options'),
-#     Output('xaxis-column', 'value'),    Output('yaxis-column', 'value'),    Output('y-axix-ddown', 'value'), 
-
-
-#     [
-#         Input('df',  'data')
-#     ]  # ,
-#     # [State("lock_selector", "value"), State("graph_tab1_fig2", "relayoutData")],
-# )
-# def update_dropdowns(
-#         jsonified_cleaned_data
-# ):
-#     print("uuid.uuid1(): ", uuid.uuid1())
-
-#     if jsonified_cleaned_data is not None:
-#         df = pd.read_json(jsonified_cleaned_data, orient='split')
-
-#         return  [   [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept) ],
-#                     [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept) ],
-#                     [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept) ],
-#                     'index', colnames_kept[0], [k for k in utils.keept_cols_2(df, colnames_kept)]
-#                 ]
-#     return [ [ ],  [], [], None, None , None  ]
-
-
-# # SET THE MODEL
-# @app.callback(
-#     Output(component_id='model-name', component_property='data'),
-#     [
-#         Input("select-model-ddown", "value"),
-#     ],
-  
-# )
-# def set_model_name(
-#         y
-# ):  
-#     #print("model is", y)
-#     return {"model": y}
-
-
-# # UPDATE FIRST PLOT BASED ON NAY CHANGE IN DROP BOX OPTIONS
-
-# # Selectors -> main graph
-# @app.callback(
-#     Output(component_id='graph_tab1_fig1', component_property='figure'),
-#     [
-#         Input("xaxis-column", "value"),
-#         Input("yaxis-column", "value"),
-#         Input('df', 'data')
-#     ],
-  
-# )
-# def make_count_figure(
-#         x_col, y_col, jsonified_cleaned_data
-# ):
-#     if jsonified_cleaned_data is not None:
-#         # more generally, this line would be
-#         # json.loads(jsonified_cleaned_data)
-#         df = pd.read_json(jsonified_cleaned_data, orient='split')
-
-#         layout_graph_tab1_fig1 = copy.deepcopy(layout)
-
-#         if x_col == 'index':
-#             xx = df.index
-#         else:
-#             xx = df[x_col]
-#         if y_col == 'index':
-#             yy = df.index
-#         else: 
-#             yy = df[y_col]
-
-#         data = [
-#             dict(
-#                 type="Scattergl",
-#                 #name="Gas Produced (mcf)",
-#                 x=xx,
-#                 y=yy,
-#                 #line=dict(shape="spline", smoothing=2, width=1),  # , color="#fac1b7"
-
-#                 opacity=0.5,
-#                 hoverinfo="skip",
-#                 # marker=dict(color=colors),
-
-#                 mode="markers",  # lines+
-#                 # line=dict(shape="spline", smoothing=2, width=1, color=(list(COLORS.values()))[i]),
-#                 marker=dict(symbol="circle-open"),
-#                 marker_size=2,
-
-#             )]
-#         layout_graph_tab1_fig1["title"] = y_col
-#         layout_graph_tab1_fig1["dragmode"] = "select"
-#         layout_graph_tab1_fig1["showlegend"] = False
-#         layout_graph_tab1_fig1["autosize"] = True
-#         figure = dict(data=data, layout=layout_graph_tab1_fig1)
-
-
-#         return figure
-#     return {'layout': {'title': 'No input specified, please fill in an input.'}}
-
 @app.callback(
-    Output('xaxis-column', 'options'),
-    Output('yaxis-column', 'options'),
-    Output('y-axix-ddown', 'options'),
-    Output('xaxis-column', 'value'),
-    Output('yaxis-column', 'value'),
-    Output('y-axix-ddown', 'value'),
-    [Input('df', 'data')]
+    Output('xaxis-column', 'options'),  # Output options for x-axis column dropdown
+    Output('yaxis-column', 'options'),  # Output options for y-axis column dropdown
+    Output('y-axix-ddown', 'options'),  # Output options for y-axis dropdown
+    Output('xaxis-column', 'value'),  # Output value for x-axis column dropdown
+    Output('yaxis-column', 'value'),  # Output value for y-axis column dropdown
+    Output('y-axix-ddown', 'value'),  # Output value for y-axis dropdown
+    [Input('df', 'data')]  # Input: JSONified cleaned data from 'df' component
 )
-@logger
+@logger  # Decorator to log the function execution
 def update_dropdowns(jsonified_cleaned_data):
+    """
+    Update the dropdowns options and values based on the input data.
+
+    Parameters:
+    - jsonified_cleaned_data (str): JSONified cleaned data from the 'df' component.
+
+    Returns:
+    - options and values for x-axis column dropdown, y-axis column dropdown, and y-axis dropdown.
+    """
     if jsonified_cleaned_data is not None:
+        # Read the JSONified cleaned data and convert it to a DataFrame
         df = pd.read_json(jsonified_cleaned_data, orient='split')
-        return [
-            [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept)],
-            [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept)],
-            [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept)],
-            'index', colnames_kept[0], [k for k in utils.keept_cols_2(df, colnames_kept)]
-        ]
+
+        # Generate options for x-axis column dropdown, y-axis column dropdown, and y-axis dropdown
+        xaxis_options = [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept)]
+        yaxis_options = [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept)]
+        y_ddown_options = [{'label': k, 'value': k} for k in ['index'] + utils.keept_cols_2(df, colnames_kept)]
+
+        # Set the default values for x-axis column dropdown, y-axis column dropdown, and y-axis dropdown
+        xaxis_value = 'index'
+        yaxis_value = colnames_kept[0]
+        y_ddown_value = [k for k in utils.keept_cols_2(df, colnames_kept)]
+
+        return [xaxis_options, yaxis_options, y_ddown_options, xaxis_value, yaxis_value, y_ddown_value]
+
+    # If there is no input data, return empty options and None values
     return [[], [], [], None, None, None]
+
 
 
 @app.callback(
@@ -813,16 +685,29 @@ def set_model_name(y):
 
 
 @app.callback(
-    Output(component_id='graph_tab1_fig1', component_property='figure'),
-    [Input("xaxis-column", "value"),
-     Input("yaxis-column", "value"),
-     Input('df', 'data')]
+    Output(component_id='graph_tab1_fig1', component_property='figure'),  # Output figure for graph_tab1_fig1
+    [Input("xaxis-column", "value"),  # Input value for x-axis column dropdown
+     Input("yaxis-column", "value"),  # Input value for y-axis column dropdown
+     Input('df', 'data')]  # Input: JSONified cleaned data from 'df' component
 )
-@logger
+@logger  # Decorator to log the function execution
 def make_count_figure(x_col, y_col, jsonified_cleaned_data):
+    """
+    Generate the figure for graph_tab1_fig1 based on the selected x-axis and y-axis columns.
+
+    Parameters:
+    - x_col (str): Selected value from the x-axis column dropdown.
+    - y_col (str): Selected value from the y-axis column dropdown.
+    - jsonified_cleaned_data (str): JSONified cleaned data from the 'df' component.
+
+    Returns:
+    - figure (dict): The generated figure as a dictionary object.
+    """
     if jsonified_cleaned_data is not None:
+        # Read the JSONified cleaned data and convert it to a DataFrame
         df = pd.read_json(jsonified_cleaned_data, orient='split')
 
+        # Create a deep copy of the layout for graph_tab1_fig1
         layout_graph_tab1_fig1 = copy.deepcopy(layout)
 
         if x_col == 'index':
@@ -834,6 +719,7 @@ def make_count_figure(x_col, y_col, jsonified_cleaned_data):
         else:
             yy = df[y_col]
 
+        # Define the data for the scatter plot
         data = [
             dict(
                 type="Scattergl",
@@ -846,101 +732,22 @@ def make_count_figure(x_col, y_col, jsonified_cleaned_data):
                 marker_size=2,
             )
         ]
+
+        # Update the layout for graph_tab1_fig1
         layout_graph_tab1_fig1["title"] = y_col
         layout_graph_tab1_fig1["dragmode"] = "select"
         layout_graph_tab1_fig1["showlegend"] = False
         layout_graph_tab1_fig1["autosize"] = True
+
+        # Create the figure dictionary
         figure = dict(data=data, layout=layout_graph_tab1_fig1)
 
         return figure
+
+    # If there is no input data, return a layout with a title indicating no input specified
     return {'layout': {'title': 'No input specified, please fill in an input.'}}
 
 
-
-# @app.callback(
-#     Output(component_id='graph_tab1_fig2', component_property='figure'),
-#     [
-#         Input("y-axix-ddown", "value"),
-#         Input('df', 'data')
-#     ]  # ,
-#     # [State("lock_selector", "value"), State("graph_tab1_fig2", "relayoutData")],
-# )
-# def make_figure(
-#         y_col, jsonified_cleaned_data # , selector, graph_tab1_fig2_layout
-# ):
-#     if jsonified_cleaned_data is not None:
-#         # more generally, this line would be
-#         # json.loads(jsonified_cleaned_data)
-#         df = pd.read_json(jsonified_cleaned_data, orient='split')
-
-#         layout_graph_tab1_fig1 = copy.deepcopy(layout)
-
-#         n_rows = len(y_col)
-#         data = []
-#         for i in range(n_rows):
-#             data.append(df[y_col[i]].tolist())
-#         labels = y_col
-
-    
-
-#         plotly_data = []
-#         plotly_layout = plotly.graph_objs.Layout()
-#         colors = ['black', 'red', 'blue', 'green', 'purple', 'orange', 'gray']
-#         # your layout goes here
-#         layout_kwargs = {
-#                         'title': 'Sensor Data:',
-#                         'xaxis': {'domain': [0, 0.8]}
-#                         }
-#         for i, d in enumerate(data):
-#             # we define our layout keys by string concatenation
-#             # * (i > 0) is just to get rid of the if i > 0 statement
-#             axis_name = 'yaxis' + str(i + 1) * (i > 0)
-#             yaxis = 'y' + str(i + 1) * (i > 0)
-#             plotly_data.append(plotly.graph_objs.Scatter(x= df.index, y=d, 
-#                                                         name=labels[i]))
-          
-#             layout_kwargs[axis_name] = {
-#                                         'range': [df[labels[i]].min()*0.9, df[labels[i]].max()*1.1],
-#                                         'position': 1 - i * 0.04,
-                                    
-#                                         'title' : labels[i],
-#                                         'titlefont' : dict(
-#                                           #color=colors[i],# "#9467bd"
-#                                             color=px.colors.qualitative.D3[i]
-#                                         ),
-                                    
-#                                         'tickfont' : dict(
-#                                             #color=colors[i],# "#9467bd"
-#                                             color=px.colors.qualitative.D3[i]
-#                                         ),
-#                                         'anchor' : "free",
-#                                         #'overlaying' : "y",
-#                                         'side' : "right",
-#                                         "showline": True
-                                    
-#                                     }
-
-#             plotly_data[i]['yaxis'] = yaxis
-#             if i > 0:
-#                 layout_kwargs[axis_name]['overlaying'] = 'y'
-
-            
-            
-#         fig = go.Figure(data=plotly_data, layout=plotly.graph_objs.Layout(**layout_kwargs))
-        
-#         fig.layout.plot_bgcolor = '#fff'
-#         fig.layout.paper_bgcolor = '#fff'
-
-#         fig.update_layout(legend=dict(
-#             orientation="h",
-#             yanchor="bottom",
-#             y=1.02,
-#             xanchor="right",
-#             x=1
-#         ))
-        
-#         return fig
-#     return {'layout': {'title': 'No input specified, please fill in an input.'}}
 
 @app.callback(
     Output(component_id='graph_tab1_fig2', component_property='figure'),
@@ -1007,141 +814,6 @@ def make_figure(y_col, jsonified_cleaned_data):
 
 #########################################################################################################################
 
-# #----------------------------------------------------------
-
-# # READ THE XLSS FILE, DO PREPROCESSING, IMPUTING, OUTLIER REMOVAL AND SCALING OF MEAS_RATE
-# #----------------------------------------------------------
-
-# @app.callback(Output('tab2-data',  'data'),
-#             #    Output('datepicker-from-tab2', 'min_date_allowed'), Output('datepicker-from-tab2', 'max_date_allowed'),Output('datepicker-from-tab2', 'date'),
-#             #    Output('datepicker-to-tab2', 'min_date_allowed'), Output('datepicker-to-tab2', 'max_date_allowed'),Output('datepicker-to-tab2', 'date'),
-#                Output('tab2-report1', 'children'),
-#                Output('tab2y-axix-ddown', 'options'),Output('tab2y-axix-ddown', 'value'),
-#                Output('tab2-section3-y-axix-ddown', 'options'),Output('tab2-section3-y-axix-ddown', 'value'),
-#                Output('tab2-section4-y-axix-ddown', 'options'),Output('tab2-section4-y-axix-ddown', 'value'),
-               
-#                Output('tab2-data-preprocessed', 'data'),
-#                 Output("tab2-input-max-corrosion-risk", "value"),
-#                 Output("tab2-input-accumulated-corrosion-risk", "value"),
-#                 Output("tab2-input-max-average-corrosion-risk", "value"),
-                
-#             [Input('df',  'data'),
-#             #Input('check-preprocess', 'value'),
-#             Input("datepicker-from-tab2", "date"),
-#             Input("datepicker-to-tab2", "date"),
-
-#             ])
-
-# def preprocess_df(jsonified_cleaned_data,  date_from, date_to):#checkedProcess,
-#      df_current = None
-    
-#      if jsonified_cleaned_data is not None: #and  'Preprocessing' in checkedProcess:
-#         # more generally, this line would be
-#         # json.loads(jsonified_cleaned_data)
-#         df_current = pd.read_json(jsonified_cleaned_data, orient='split')
-
-#         # filter by date
-#  #, '%d/%m/%y %H:%M:%S'  2020-11-12T17:00:00+00:00
-#         #print("test", date_from, date_to)
-#         if date_from is not None and date_to is not None:
-#             #print(date_from, date_to)
-#             date_from = date_from.split('T')[0]
-#             #print(date_from)
-#             date_to = date_to.split('T')[0]
-#             print("date time picker modified: ", date_to, "\t", date_from )
-#             #print(date_to)
-#             ##print("=>", type(datetime.strptime(date_from, "%Y-%m-%d")))
-#             #print("=>", type(datetime.strptime(date_from, "%Y-%m-%d")+1))
-
-        
-#             df_current = df_current.loc[date_from: date_to]  
-
-            
-
-#         #df_current = None
-#         #df_current = upload.parse_contents(list_of_contents[0], list_of_names[0], list_of_dates[0])[1]
-
-#         #remove the outliers
-#         #df_current['savgol'] = scp.savgol_filter(x = df_current['Meas_Rate'], window_length=21, polyorder = 1, deriv=0)#, delta=1.0, axis=- 1, mode='interp', cval=0.0
-#         #df_current['savgol_deriv'] = scp.savgol_filter(x = df_current['Meas_Rate'], window_length=21, polyorder = 1, deriv=1)#, delta=1.0, axis=- 1, mode='interp', cval=0.0
-#         #df_current['savgol_stable'] = df_current['savgol' ][abs(df_current['savgol_deriv']) < 0.00063]
-#         #df_current['savgol_stable'] = df_current['savgol' ]
-
-#         #  Scale Meas_Rate
-#         #features = df_current['savgol_stable'] 
-#         # Use scaler of choice; here Standard scaler is used
-#         #scaler = StandardScaler().fit(features.values.reshape(-1,1))
-#         #features = scaler.transform(features.values.reshape(-1,1))
-#         #df_current['Meas_Rate'] = features
-
-#         #print("df_current updated")
-#         #print("=============")
-#         #print(df_current.info(null_counts=True))
-#         #nan_dfa_loop1 = pd.DataFrame([(col, n, n/df_current.shape[0]) for col in df_current.columns for n in (df_current[col].isna().sum(),) if n], columns=df_current.columns)
-        
-#         #count_nan = df_current.isna().sum()/df_current.shape[0]*100        
-#         count_nan = df_current.isnull().mean() * 100
-        
-         
-        
-
-#         nbObs = 0 #df_current['savgol_stable'].shape[0]
-#         nbAfterSavGol = 0 #nbObs -  df_current['savgol_stable'].isnull().sum()
-#         percentage = 0 #(float (nbAfterSavGol) / float (nbObs))*100
-#         #percentage = "{:.2f}".format(percentage)
-
-#         return_divs = [html.P("Percentage of missing values:\n {missing_percentages}", style={'color': 'red'} )]
-
-#         print("----------test:\n")
-#         K=3
-#         conseq_nulls = utils.cols_with_k_consecutive_nans_2(df_current, K)
-#         #print(conseq_nulls)
-#         mes_pieces = {}
-#         for col in df_current.columns:
-#             if(conseq_nulls[col]):
-#                 mes_pieces[col]="and contain consecutive nulls of the length "  + str(K) 
-
-
-#         return_divs.append (	html.P(f"total number of observations: {df_current.shape[0]}"))
-#         cols = df_current.columns
-#         df_current = df_current.dropna(subset=cols)
-
-#         print(df_current.head())
-
-#         for val, col in zip(count_nan, df_current.columns):
-#             print(col, col, "\t", len(df_current[col].values), "\t", len([i for i in range(df_current.shape[0])]))
-            
-#             reg = LinearRegression().fit(np.array([i for i in range(df_current.shape[0])]).reshape(-1,1), list(df_current[col].values))
-#             slope = (reg.coef_[0])
-#             #return_divs.append(	html.P())
-#             msg = col  + " contains " + str("{:.2f}".format(val)) + " percent missing values "
-
-#             if(mes_pieces.get(col)):
-#                 msg = msg + mes_pieces[col]
-
-#             msg = msg + ". Linear regression slope for is : " +  str("{:.3f}".format(slope))
-#             print(msg)
-#             return_divs.append(	html.P(msg ))
-
-#         return_divs.append (html.P("Consecutive missing values (at least 3)\n", style={'color': 'red'}))
-#         missing_seqs = [ df_current[a].isnull().astype(int).groupby(df_current[a].notnull().astype(int).cumsum()).sum() for a in df_current.columns]
-
-#         return_divs.append(	html.P("The computations continue by elliminating the rows containing missing values.", style={'color': 'red'}))
-        
-#         return [
-#                 df_current.to_json(date_format='iso', orient='split'), 
-#                 # df_current.index.min(), df_current.index.max(), df_current.index.min(),
-#                 # df_current.index.min(), df_current.index.max(), df_current.index.max(),
-#                 return_divs,
-#                 [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  utils.keept_cols_2(df_current, colnames_kept) ],
-#                 [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  utils.keept_cols_2(df_current, colnames_kept) ],
-#                 [{'label': k, 'value': k} for k in  colnames_kept ], [ k for k in  utils.keept_cols_2(df_current, colnames_kept) ],
-                
-#                 df_current.to_json(date_format='iso', orient='split'), 0.6, 100,0.6
-#         ]
-               
-#      #return [None , None, None, None, None, None, None]
-#      return [None , None , None, None, None , None, None, [], [], [], [], [], [], [], None, 0.6, 100,0.6]
 
 @app.callback(
     Output('tab2-data', 'data'),
@@ -1269,28 +941,28 @@ def make_figure_tab2(
         df_tmp = None 
 
         if ml_model_name['model'] == 'Waste Water, Anoxic':     #1
-            _path = os.path.join(MODEL_DIR, 'KULAnoxic_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'KULAnoxic.sav')
             model_loaded = joblib.load(_path)
 
         elif ml_model_name['model'] == 'Waste Water, Oxic':     #2
-            _path = os.path.join(MODEL_DIR, 'KULOxic_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'KULOxic.sav')
             model_loaded = joblib.load(_path)
 
-        elif ml_model_name['model'] == 'Waste Water, Combined_rg': #3
-            _path = os.path.join(MODEL_DIR, 'Waste Water, Combined_rg.sav')
+        elif ml_model_name['model'] == 'Waste Water, Combined': #3
+            _path = os.path.join(MODEL_DIR, 'Waste Water, Combined.sav')
             model_loaded = joblib.load(_path)
 
         elif ml_model_name['model'] == 'Seawater, Field trained':     #4
-            _path = os.path.join(MODEL_DIR, 'SH1NH2_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'SH1NH2.sav')
             model_loaded = joblib.load(_path)
 
         elif ml_model_name['model'] == 'Seawater, Lab trained':     #5
-            _path = os.path.join(MODEL_DIR, 'Seawater, Lab trained_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'Seawater, Lab trained.sav')
             model_loaded = joblib.load(_path)
 
         else: 
             logging.debug("module is not available... program exits")
-            _path = os.path.join(MODEL_DIR, 'KULAnoxic_rg.sav')
+            _path = os.path.join(MODEL_DIR, 'KULAnoxic.sav')
             model_loaded = joblib.load(_path)
         
 
@@ -1616,11 +1288,5 @@ if __name__ == "__main__":
 
     debug =  True
     app.run_server(host="0.0.0.0", port=8050, debug=debug)
-
-
-#if __name__ == "__main__":
-#    # print("Data Types: " , df_current.dtypes)
-#    # print("Index Name: ", df_current.index.name)
-#    app.run_server(debug=True, threaded=False)
 
 

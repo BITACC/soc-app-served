@@ -1,3 +1,14 @@
+#############################################################################################
+# Sharkey Predictim Globe
+# Email: contact@predictim-globe.com
+# Web: www.predictim-globe.com
+# File: color.py
+# Description: This code is a part of the SOCORRO App 
+# Author: Rahimeh N Monemi
+# Date: 25/05/2023
+#############################################################################################
+
+
 # flake8: noqa
 
 # In[]:
