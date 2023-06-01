@@ -588,12 +588,16 @@ app.layout = html.Div(
 )
 @logger
 def download_csv(n_clicks, jsonified_predicted_data):
-    # Convert JSON data to DataFrame
-    df = pd.read_json(jsonified_predicted_data, orient='split')
-    # Save DataFrame to CSV file
-    #df.to_csv(r'a.csv', sep=';', index=False, header=True, encoding='utf-8')
-    # Return the CSV file for download
-    return dcc.send_data_frame(df.to_csv, "SOCORROAPP.csv")  # date.ctime() +
+
+    if jsonified_predicted_data is not None:
+        # Convert JSON data to DataFrame
+        df = pd.read_json(jsonified_predicted_data, orient='split')
+        # Save DataFrame to CSV file
+        #df.to_csv(r'a.csv', sep=';', index=False, header=True, encoding='utf-8')
+        # Return the CSV file for download
+        return dcc.send_data_frame(df.to_csv, "SOCORROAPP.csv")  # date.ctime() +
+    else:
+        return None
 
 @app.callback(
     Output('df', 'data'),
@@ -628,12 +632,16 @@ def update_output(uploaded_file_contents, uploaded_filenames, list_of_dates):
                                  index_col=['DateTime'], dayfirst=True)
         msg = ""
 
-    df_current = utils.prepare_data([df_current])
-    df_current = utils.keep_columns(df_current[0], utils.casefolded_train_col_names_except_date_time_target)
-
-    return [df_current.to_json(date_format='iso', orient='split'), html.Ul(uploaded_file_path), msg,
-            df_current.index.min(), df_current.index.max(), df_current.index.min(),
-            df_current.index.min(), df_current.index.max(), df_current.index.max()]
+    df_current, msg = utils.prepare_data([df_current])
+    #df_current = utils.keep_columns(df_current[0], utils.casefolded_train_col_names_except_date_time_target)
+    if df_current is not None:
+        return [df_current[0].to_json(date_format='iso', orient='split'), html.Ul(uploaded_file_path), msg,
+                df_current[0].index.min(), df_current[0].index.max(), df_current[0].index.min(),
+                df_current[0].index.min(), df_current[0].index.max(), df_current[0].index.max()]
+    else:
+        return [None, html.Ul(msg, style={'color': 'red'}), None,
+                None, None, None,
+                None, None, None]
 
 @app.callback(
     Output('xaxis-column', 'options'),  # Output options for x-axis column dropdown
@@ -897,7 +905,12 @@ def preprocess_df(jsonified_cleaned_data, date_from, date_to):
                 df_current.to_json(date_format='iso', orient='split'), 0.6, 100,0.6
         ]
                
-    return [None , None , None, None, None , None, None, [], [], [], [], [], [], [], None, 0.6, 100,0.6]
+    return [None , 
+            None , 
+            None, None, 
+            None , None, 
+            None , None, 
+            None,  0.6, 100,0.6]
 
 
 #----------------------------------------------------------
@@ -1018,7 +1031,7 @@ def make_figure_tab2(
         fig3 = make_figure_tab2_fig3(df, data, y_col, ['Acc. Corrosion Risk'], accumulated_corrosion_risk)
 
         return [fig1, fig2, fig3, df.to_json(date_format='iso', orient='split'), return_divs1, return_divs2, return_divs3] #, , 
-    return [None, None, None, {'layout': {'title': 'No input specified, please fill in an input.'}},  None, None, None] #, None, None
+    return [None, None, None, None,  None, None, None] #, None, None
 @logger
 def make_figure_tab2_fig1(df, data, _labels, added_cols):
 

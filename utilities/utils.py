@@ -57,37 +57,45 @@ def data_import( data_type , Multifile = True):
     return df#, train_datafile
 
 def prepare_data(df, Multifile = True):
+    msg = ""
     if not Multifile :
-        df = strip_remove_multiplespace_df_colnames(df, to_casefold=True)
-        df = df[casefolded_train_col_names]
-        #df = drop_empty_rows_cols(df)
-        #df = create_datatime_col(df)
-        #df = drop_empty_or_sparse_cols(df, ['date', 'time'])
-        df = strip_no_numeric_cols(df)
-        set_df_col_as_index(df, 'DateTime') 
-        for c in df.columns:
-            df[c] = pd.to_numeric(df[c])
-        df = df.dropna(subset = ['temperature', 	'ph', 	'dissolved oxygen (mg/l)', 	'conductivity at 25°c', 	'orp redox potential',	'corrosion rate (lpr)']) 
-        #df.values.astype(np.float64)
-        
+        try:
+            df = strip_remove_multiplespace_df_colnames(df, to_casefold=True)
+            df = df[casefolded_train_col_names]
+            #df = drop_empty_rows_cols(df)
+            #df = create_datatime_col(df)
+            #df = drop_empty_or_sparse_cols(df, ['date', 'time'])
+            df = strip_no_numeric_cols(df)
+            set_df_col_as_index(df, 'DateTime') 
+            for c in df.columns:
+                df[c] = pd.to_numeric(df[c])
+            df = df.dropna(subset = ['temperature', 	'ph', 	'dissolved oxygen (mg/l)', 	'conductivity at 25°c', 	'orp redox potential',	'corrosion rate (lpr)']) 
+            #df.values.astype(np.float64)
+        except ValueError:
+            msg = "Error: Input file is not in correct format"
+            return None, msg
     else:
-        df = [strip_remove_multiplespace_df_colnames(f, to_casefold=True) for f in df]
-        #{str.casefold(x) for x in parameters.cols_for_training} & {str.casefold(x) for x in a2}
-        df = [f[casefolded_train_col_names] for f in df]
-        #df = [drop_empty_rows_cols(f) for f in df]
-        #df = [create_datatime_col(f) for f in df]
-        #df = [drop_empty_or_sparse_cols(f, ['date', 'time']) for f in df]  #
-        df = [strip_no_numeric_cols(f) for f in df]  #
-        df = [set_df_col_as_index(f, 'DateTime') for f in df] 
-        #df = [f.values.astype(np.float64) for f in df] 
-        df =[ f.dropna(how='any',axis=0) for f in df ]
-        for f in df:
-            for c in f.columns:
-                f[c] = pd.to_numeric(f[c], errors = 'coerce')
-            f = f.dropna(subset = casefolded_train_col_names_except_date_time_target) 
-
+        try: 
+            df = [strip_remove_multiplespace_df_colnames(f, to_casefold=True) for f in df]
+            #{str.casefold(x) for x in parameters.cols_for_training} & {str.casefold(x) for x in a2}
+            df = [f[casefolded_train_col_names] for f in df]
+            #df = [drop_empty_rows_cols(f) for f in df]
+            #df = [create_datatime_col(f) for f in df]
+            #df = [drop_empty_or_sparse_cols(f, ['date', 'time']) for f in df]  #
+            df = [strip_no_numeric_cols(f) for f in df]  #
+            df = [set_df_col_as_index(f, 'DateTime') for f in df] 
+            #df = [f.values.astype(np.float64) for f in df] 
+            df =[ f.dropna(how='any',axis=0) for f in df ]
+            for f in df:
+                for c in f.columns:
+                    f[c] = pd.to_numeric(f[c], errors = 'coerce')
+                f = f.dropna(subset = casefolded_train_col_names_except_date_time_target) 
+        except :
+            msg = "Error: Input file is not in correct format"
+            return None, msg
+            
     
-    return df
+    return df, msg
 
 
 
