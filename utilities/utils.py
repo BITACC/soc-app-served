@@ -25,7 +25,7 @@ NOTEBOOKS_FOLDER = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'
 sys.path.append(NOTEBOOKS_FOLDER)
 
 from parameters import params
-casefolded_train_col_names = [str.casefold(x) for x in params.cols_for_training_except_date_time]
+casefolded_train_col_names = [str.casefold(x) for x in params.cols_for_training_except_date_time_CorrosionRate]
 casefolded_train_col_names_except_date_time = [str.casefold(x) for x in params.cols_for_training_except_date_time]
 casefolded_train_col_names_except_date_time_target = [str.casefold(x) for x in params.cols_for_training_except_date_time_CorrosionRate]
 

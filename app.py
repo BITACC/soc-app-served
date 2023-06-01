@@ -260,11 +260,12 @@ app.layout = html.Div(
                                                 value=ml_models[0]['value'],
                                                 className="dcc_control",
                                             ),                                          
-                                            html.P("Choose y-axis:", className="control_label"),
+                                            html.P("Choose x-axis:", className="control_label"),
                                             dcc.Dropdown(
                                                 id="xaxis-column",
                                                 className="dcc_control",
                                             ),
+                                            html.P("Choose y-axis:", className="control_label"),
                                             dcc.Dropdown(
                                                 id="yaxis-column",
                                                 className="dcc_control",
@@ -590,7 +591,7 @@ def download_csv(n_clicks, jsonified_predicted_data):
     # Convert JSON data to DataFrame
     df = pd.read_json(jsonified_predicted_data, orient='split')
     # Save DataFrame to CSV file
-    df.to_csv(r'a.csv', sep=';', index=False, header=True, encoding='utf-8')
+    #df.to_csv(r'a.csv', sep=';', index=False, header=True, encoding='utf-8')
     # Return the CSV file for download
     return dcc.send_data_frame(df.to_csv, "SOCORROAPP.csv")  # date.ctime() +
 
