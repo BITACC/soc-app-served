@@ -906,7 +906,7 @@ def preprocess_df(jsonified_cleaned_data, date_from, date_to):
         ]
                
     return [None , 
-            None , 
+            [html.P("Error: Inpurt file error. \n", style={'color': 'red'})],
             None, None, 
             None , None, 
             None , None, 
