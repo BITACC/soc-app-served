@@ -1,3 +1,4 @@
+packaging
 #appdirs==1.4.4
 #argh==0.26.2
 #atomicwrites==1.4.0
@@ -90,4 +91,4 @@ xlrd
 #==1.2.0
 #pickle
 joblib==1.2.0
-
+packaging
