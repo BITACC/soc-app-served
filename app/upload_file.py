@@ -3,8 +3,10 @@ import base64
 import datetime
 import io
 import os
-import dash_html_components as html
-import dash_table
+#import dash_html_components as html
+#import dash_table
+from dash import html, dash_table
+
 from  utilities import SESSION_ID, UPLOAD_DIRECTORY
 
 #path = '..\\..\\Phase 1\\data\\'
